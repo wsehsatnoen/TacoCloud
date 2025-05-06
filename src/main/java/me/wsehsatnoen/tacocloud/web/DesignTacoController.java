@@ -11,6 +11,7 @@ import me.wsehsatnoen.tacocloud.tacos.Ingredient.Type;
 import me.wsehsatnoen.tacocloud.tacos.Taco;
 import me.wsehsatnoen.tacocloud.tacos.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
 
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo) {
+        this.ingredientRepo = ingredientRepo;
+    }
+
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
         Iterable<Ingredient> ingredients = ingredientRepo.findAll();
@@ -31,7 +37,7 @@ public class DesignTacoController {
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
+                    filterByType((List<Ingredient>) ingredients, type));
         }
     }
 
